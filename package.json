@@ -16,8 +16,11 @@
   "license": "ISC",
   "homepage": "https://github.com/Muh-Hamza-99/youtube-backend#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "formidable": "^2.0.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.6"
   }
 }
