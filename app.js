@@ -5,6 +5,8 @@ const mongoose = require("mongoose")
 const express = require("express");
 const app = express();
 
+app.use(express.json({ limit: "10kb" }));
+
 const DB = process.env.MONGO_URI.replace("<PASSWORD>", process.env.MONGO_PASSWORD);
 
 mongoose.connect(DB)
