@@ -8,6 +8,15 @@ const signup = async (req, res) => {
     res.status(201).json({ status: "success", user: newUser });
 };
 
+const login = async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) return;
+    const user = await User.findOne({ email }).select("+password");
+    if (!user || await user.correctPassword(password, user.password)) return;
+    res.status(200).json({ status: "success", user });
+};
+
 module.exports = {
     signup,
-}
+    login,
+};
