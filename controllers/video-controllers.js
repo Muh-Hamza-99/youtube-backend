@@ -25,7 +25,7 @@ const stream = async (req, res) => {
 
 const updateVideo = async (req, res) => {
     const { videoID } = req.params;
-    const { name } = req.body
+    const { name } = req.body;
     const video = await Video.findByIdAndUpdate(videoID, { name }, { runValidators: true, new: true });
     res.status(200).json({ status: "success", video });
 };
