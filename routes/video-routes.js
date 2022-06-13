@@ -6,6 +6,7 @@ const {
     stream,
     updateVideo,
     deleteVideo,
+    likeVideo,
 } = require("./../controllers/video-controllers");
 
 const videoUpload = require("../middleware/video-upload");
@@ -19,6 +20,7 @@ router
     .route("/:videoID")
     .get(stream)
     .patch(protect, updateVideo)
-    .delete(protect, deleteVideo);
+    .delete(protect, deleteVideo)
+    .patch(protect, likeVideo);
 
 module.exports = router;

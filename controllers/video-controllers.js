@@ -2,7 +2,7 @@ const fs = require("fs");
 
 const Video = require("./../models/Video");
 
-const isOwner = videoID => {
+const isOwner = async (videoID) => {
     const video = await Video.findById(videoID);
     if (video.owner !== req.token._id.toString()) return false;
     return true;
@@ -43,12 +43,18 @@ const deleteVideo = async (req, res) => {
     if (!video) return;
     const videoPath = `videos/${video.videoPath}`;
     if (!fs.existsSync(videoPath)) return;
-    fs.unlink(videoPath, error => {
+    fs.unlink(videoPath, async (error) => {
         if (error) return;
         if (!isOwner(videoID)) return;
-        await Video.findByIdAndDelete({ _id: videoID });
+        await Video.findByIdAndDelete(videoID);
         return res.status(204).json({ status: "success", video: null });
     });
+};
+
+const likeVideo = async (req, res) => {
+    const { videoID } = req.params;
+    const video = await Video.findByIdAndUpdate(videoID, { $inc: { likes: 1 } }, { runValidators: true, new: true });
+    res.status(204).json({ status: "success", video });
 };
 
 module.exports = {
@@ -56,4 +62,5 @@ module.exports = {
     stream,
     updateVideo,
     deleteVideo,
+    likeVideo,
 };
