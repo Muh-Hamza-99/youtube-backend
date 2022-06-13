@@ -11,17 +11,12 @@ const {
 const videoUpload = require("../middleware/video-upload");
 const protect = require("../middleware/protect");
 
+router.post(protect, videoUpload.single("video"), uploadVideo);
+
 router
-    .route("/")
-    .post(protect, videoUpload.single("video"), uploadVideo)
+    .route("/:videoID")
+    .get(stream)
+    .delete(deleteVideo)
     .patch(updateVideo);
-
-router
-    .route("/:fileName")
-    .get(stream);
-
-router
-    .route("/:videoID/:path")
-    .delete(deleteVideo);
 
 module.exports = router;
