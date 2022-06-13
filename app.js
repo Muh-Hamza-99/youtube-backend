@@ -6,10 +6,12 @@ const express = require("express");
 const app = express();
 
 const userRouter = require("./routes/user-routes");
+const videoRouter = require("./routes/video-routes");
 
 app.use(express.json({ limit: "10kb" }));
 
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/videos", videoRouter);
 
 const DB = process.env.MONGO_URI.replace("<PASSWORD>", process.env.MONGO_PASSWORD);
 

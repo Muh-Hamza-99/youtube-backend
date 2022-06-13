@@ -4,7 +4,7 @@ const JWT = require("jsonwebtoken");
 
 const User = require("./../models/User");
 
-const protect = (req, res, next) => {
+const protect = async (req, res, next) => {
     let token;
     const { authorisation } = req.headers;
     if (authorisation && authorisation.startsWith("Bearer")) token = authorisation.split(" ")[1];
