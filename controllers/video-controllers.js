@@ -14,8 +14,8 @@ const uploadVideo = async (req, res) => {
 };
 
 const stream = async (req, res) => {
-    const { range } = req.headers;
     const { videoID } = req.params;
+    const { range } = req.body;
     if (!range) return;
     const video = await Video.findById(videoID);
     if (!video) return;
