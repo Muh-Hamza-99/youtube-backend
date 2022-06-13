@@ -57,10 +57,17 @@ const likeVideo = async (req, res) => {
     res.status(204).json({ status: "success", video });
 };
 
+const dislikeVideo = async (req, res) => {
+    const { videoID } = req.params;
+    const video = await Video.findByIdAndUpdate(videoID, { $inc: { dislikes: 1 } }, { runValidators: true, new: true });
+    res.status(204).json({ status: "success", video });
+};
+
 module.exports = {
     uploadVideo,
     stream,
     updateVideo,
     deleteVideo,
     likeVideo,
+    dislikeVideo,
 };
