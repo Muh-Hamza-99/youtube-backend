@@ -10,8 +10,13 @@ const {
 const videoUpload = require("../middleware/video-upload");
 const protect = require("../middleware/protect");
 
-router.get("/:fileName", stream);
-router.post("/", protect, videoUpload.single("video"), uploadVideo);
-router.patch("/", updateVideo);
+router
+    .route("/")
+    .post(protect, videoUpload.single("video"), uploadVideo)
+    .patch(updateVideo);
+
+router
+    .route("/:fileName")
+    .get(stream);
 
 module.exports = router;
