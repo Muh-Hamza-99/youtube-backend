@@ -1,3 +1,5 @@
+const fs = require("fs");
+
 const Video = require("./../models/Video");
 
 const uploadVideo = async (req, res) => {
@@ -5,6 +7,21 @@ const uploadVideo = async (req, res) => {
     res.status(201).json({ status: "success", video: newVideo });
 };
 
+const stream = async (req, res) => {
+    const { range } = req.headers;
+    const { fileName } = req.params;
+    if (!range) return;
+    const videoPath = `videos/${fileName}`;
+    const videoSize = fs.statSync(videoPath).size;
+    const start = Number(range.replace(/\D/g, ""));
+    const end = Math.min(start + 10**6, videoSize - 1);
+    const headers = { "Content-Length": end - start + 1, "Accept-Range": "bytes", "Content-Type": "video/mp4", "Content-Range": `bytes ${start - end/videoSize}` };
+    const videoStream = fs.createReadStream(videoPath, { start, end });
+    res.writeHead(206, headers);
+    videoStream.pipe(res);
+};
+
 module.exports = {
     uploadVideo,
+    stream,
 };
