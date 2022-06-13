@@ -2,6 +2,7 @@ const fs = require("fs");
 
 const Video = require("./../models/Video");
 
+const AppError = require("./../utilities/app-error");
 const catchAsync = require("./../utilities/catch-async");
 
 const isOwner = async (videoID) => {
@@ -10,17 +11,17 @@ const isOwner = async (videoID) => {
     return true;
 };
 
-const uploadVideo = catchAsync(async (req, res) => {
+const uploadVideo = catchAsync(async (req, res, next) => {
     const newVideo = await Video.create({ owner: req.token._id, name: req.body.name, videoPath: req.fileName });
     res.status(201).json({ status: "success", video: newVideo });
 });
 
-const stream = catchAsync(async (req, res) => {
+const stream = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
     const { range } = req.headers;
-    if (!range) return;
+    if (!range) return next(new AppError("Please provide a range for the video!", 400));
     const video = await Video.findById(videoID);
-    if (!video) return;
+    if (!video) return next(new AppError("No video with the provided ID!", 400));
     const videoPath = `videos/${video.videoPath}`;
     const videoSize = fs.statSync(videoPath).size;
     const start = Number(range.replace(/\D/g, ""));
@@ -31,37 +32,39 @@ const stream = catchAsync(async (req, res) => {
     videoStream.pipe(res);
 });
 
-const updateVideo = catchAsync(async (req, res) => {
+const updateVideo = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
     const { name } = req.body;
-    if (!isOwner(videoID)) return;
+    if (!isOwner(videoID)) return next(new AppError("You are not the owner of this video!", 403));
     const video = await Video.findByIdAndUpdate(videoID, { name }, { runValidators: true, new: true });
     res.status(200).json({ status: "success", video });
 });
 
-const deleteVideo = catchAsync(async (req, res) => {
+const deleteVideo = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
     const video = await Video.findById(videoID);
-    if (!video) return;
+    if (!video) return next(new AppError("No video with the provided ID!", 400));
     const videoPath = `videos/${video.videoPath}`;
-    if (!fs.existsSync(videoPath)) return;
+    if (!fs.existsSync(videoPath)) return next(new AppError("No video with the persisted path!", 400));
     fs.unlink(videoPath, async (error) => {
-        if (error) return;
-        if (!isOwner(videoID)) return;
+        if (error) return next(new AppError("Error in deleting video!", 500));
+        if (!isOwner(videoID)) return next(new AppError("You are not the owner of this video!", 403));
         await Video.findByIdAndDelete(videoID);
         return res.status(204).json({ status: "success", video: null });
     });
 });
 
-const likeVideo = catchAsync(async (req, res) => {
+const likeVideo = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
     const video = await Video.findByIdAndUpdate(videoID, { $inc: { likes: 1 } }, { runValidators: true, new: true });
+    if (!video) return next(new AppError("No video with the provided ID!", 400));
     res.status(204).json({ status: "success", video });
 });
 
-const dislikeVideo = catchAsync(async (req, res) => {
+const dislikeVideo = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
     const video = await Video.findByIdAndUpdate(videoID, { $inc: { dislikes: 1 } }, { runValidators: true, new: true });
+    if (!video) return next(new AppError("No video with the provided ID!", 400));
     res.status(204).json({ status: "success", video });
 });
 
