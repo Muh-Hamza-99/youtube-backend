@@ -15,7 +15,7 @@ const videoUpload = multer({
     storage: videoStorage,
     limits: { fileSize: 9000000 * 5 },
     fileFilter: (req, file, cb) => {
-        if (file.originalname.match(/\.(mp4|MPEG-4|mkv)$/)) return cb(new Error("Video format not supported."));
+        if (!file.originalname.match(/\.(mp4|MPEG-4|mkv)$/)) return cb(new Error("Video format not supported."));
         cb(undefined, true);
     },
 });
