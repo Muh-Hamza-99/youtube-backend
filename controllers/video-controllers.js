@@ -27,8 +27,20 @@ const updateVideo = async (req, res) => {
     res.status(200).json({ status: "success", video });
 };
 
+const deleteVideo = async (req, res) => {
+    const { videoID, path } = req.params;
+    const videoPath = `videos/${path}`;
+    if (!fs.existsSync(videoPath)) return;
+    fs.unlink(videoPath, error => {
+        if (error) return;
+        await Video.findOneAndDelete({ _id: videoID });
+        return res.status(204).json({ status: "success", video: null });
+    });
+};
+
 module.exports = {
     uploadVideo,
     stream,
     updateVideo,
+    deleteVideo,
 };

@@ -5,6 +5,7 @@ const {
     uploadVideo,
     stream,
     updateVideo,
+    deleteVideo,
 } = require("./../controllers/video-controllers");
 
 const videoUpload = require("../middleware/video-upload");
@@ -18,5 +19,9 @@ router
 router
     .route("/:fileName")
     .get(stream);
+
+router
+    .route("/:videoID/:path")
+    .delete(deleteVideo);
 
 module.exports = router;
