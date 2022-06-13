@@ -11,7 +11,9 @@ const {
 const videoUpload = require("../middleware/video-upload");
 const protect = require("../middleware/protect");
 
-router.post(protect, videoUpload.single("video"), uploadVideo);
+router
+    .route("/")
+    .post(protect, videoUpload.single("video"), uploadVideo);
 
 router
     .route("/:videoID")
