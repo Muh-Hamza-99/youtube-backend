@@ -21,7 +21,14 @@ const stream = async (req, res) => {
     videoStream.pipe(res);
 };
 
+const updateVideo = async (req, res) => {
+    const { videoID, name } = req.body;
+    const video = await Video.findOneAndUpdate({ _id: videoID }, { name }, { runValidators: true, new: true });
+    res.status(200).json({ status: "success", video });
+};
+
 module.exports = {
     uploadVideo,
     stream,
+    updateVideo,
 };
