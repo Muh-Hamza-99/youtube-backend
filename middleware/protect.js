@@ -12,6 +12,7 @@ const protect = async (req, res, next) => {
     const decoded = await promisify(JWT.verify)(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
     if (!user) return;
+    req.token = decoded;
     req.user = user;
     next();
 };
