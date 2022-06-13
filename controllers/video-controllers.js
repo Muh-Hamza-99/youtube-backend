@@ -7,12 +7,12 @@ const catchAsync = require("./../utilities/catch-async");
 
 const isOwner = async (videoID) => {
     const video = await Video.findById(videoID);
-    if (video.owner !== req.token._id.toString()) return false;
+    if (video.owner !== req.token.id.toString()) return false;
     return true;
 };
 
 const uploadVideo = catchAsync(async (req, res, next) => {
-    const newVideo = await Video.create({ owner: req.token._id, name: req.body.name, videoPath: req.fileName });
+    const newVideo = await Video.create({ owner: req.token.id, name: req.body.name, videoPath: req.fileName });
     res.status(201).json({ status: "success", video: newVideo });
 });
 

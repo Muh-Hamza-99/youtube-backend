@@ -3,16 +3,16 @@ const { v4: UUID } = require("uuid");
 
 const videoStorage = multer.diskStorage({
     destination: "videos",
-    fileName: (req, file, cb) => {
-        const id = UUID();
-        const fileName = `${req.token._id.toString()}#${id}`;
+    filename: (req, file, cb) => {
+        const fileName = `${req.token.id.toString()}#${UUID()}`;
         req.fileName = fileName;
+        cb(null, fileName);
     },
 });
 
 const videoUpload = multer({
     storage: videoStorage,
-    limits: { fileSize: 9000000 * 5 },
+    limits: { fileSize: 90000000 * 5 },
     fileFilter: (req, file, cb) => {
         if (!file.originalname.match(/\.(mp4|MPEG-4|mkv)$/)) return cb(new Error("Video format not supported."));
         cb(undefined, true);
