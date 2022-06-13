@@ -21,6 +21,9 @@ router
     .get(stream)
     .patch(protect, updateVideo)
     .delete(protect, deleteVideo)
+
+router
+    .route("/:videoID/like")
     .patch(protect, likeVideo);
 
 module.exports = router;
