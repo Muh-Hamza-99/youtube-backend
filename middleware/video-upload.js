@@ -6,7 +6,7 @@ const videoStorage = multer.diskStorage({
     fileName: (req, file, cb) => {
         const id = UUID();
         const token = req.token;
-        const fileName = `${token._id.toString()}-${id}`;
+        const fileName = `${token._id.toString()}#${id}`;
         req.fileName = fileName;
     },
 });
