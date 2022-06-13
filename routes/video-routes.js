@@ -16,7 +16,7 @@ router.post(protect, videoUpload.single("video"), uploadVideo);
 router
     .route("/:videoID")
     .get(stream)
-    .delete(deleteVideo)
-    .patch(updateVideo);
+    .patch(protect, updateVideo)
+    .delete(protect, deleteVideo);
 
 module.exports = router;

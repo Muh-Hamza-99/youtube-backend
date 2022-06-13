@@ -2,6 +2,12 @@ const fs = require("fs");
 
 const Video = require("./../models/Video");
 
+const isOwner = videoID => {
+    const video = await Video.findById(videoID);
+    if (video.owner !== req.token._id.toString()) return false;
+    return true;
+};
+
 const uploadVideo = async (req, res) => {
     const newVideo = await Video.create({ owner: req.token._id, name: req.body.name, videoPath: req.fileName });
     res.status(201).json({ status: "success", video: newVideo });
@@ -26,6 +32,7 @@ const stream = async (req, res) => {
 const updateVideo = async (req, res) => {
     const { videoID } = req.params;
     const { name } = req.body;
+    if (!isOwner(videoID)) return;
     const video = await Video.findByIdAndUpdate(videoID, { name }, { runValidators: true, new: true });
     res.status(200).json({ status: "success", video });
 };
@@ -38,6 +45,7 @@ const deleteVideo = async (req, res) => {
     if (!fs.existsSync(videoPath)) return;
     fs.unlink(videoPath, error => {
         if (error) return;
+        if (!isOwner(videoID)) return;
         await Video.findByIdAndDelete({ _id: videoID });
         return res.status(204).json({ status: "success", video: null });
     });
