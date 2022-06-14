@@ -7,7 +7,7 @@ const catchAsync = require("./../utilities/catch-async");
 
 const isOwner = async (videoID, req) => {
     const video = await Video.findById(videoID);
-    if (video.owner !== req.token.id.toString()) return false;
+    if (video.owner !== req.token.id) return false;
     return true;
 };
 
