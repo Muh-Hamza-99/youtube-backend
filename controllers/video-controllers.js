@@ -1,6 +1,7 @@
 const fs = require("fs");
 
 const Video = require("./../models/Video");
+const Comment = require("./../models/Comment");
 
 const AppError = require("./../utilities/app-error");
 const catchAsync = require("./../utilities/catch-async");
@@ -68,6 +69,14 @@ const dislikeVideo = catchAsync(async (req, res, next) => {
     res.status(204).json({ status: "success", video });
 });
 
+const commentOnVideo = catchAsync(async (req, res, next) => {
+    const { videoID } = req.params;
+    if (!req.body.comment) return next(new AppError("There is no text to comment!"));
+    const newComment = await Comment.create({ owner: req.token.id, comment: req.body.comment });
+    if (!await Video.findById(videoID)) return next(new AppError("There exists no video with the provided ID!"));
+    await Video.findByIdAndUpdate(videoID, { $push: { comments: newComment._id } });
+});
+
 module.exports = {
     uploadVideo,
     stream,
@@ -75,4 +84,5 @@ module.exports = {
     deleteVideo,
     likeVideo,
     dislikeVideo,
+    commentOnVideo,
 };
