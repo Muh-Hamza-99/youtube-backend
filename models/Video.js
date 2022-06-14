@@ -26,10 +26,12 @@ const videoSchema = new mongoose.Schema({
         type: Array,
         default: [],
     },
-    comments: {
-        type: Array,
-        default: [],
-    },
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment",
+        }
+    ],
 });
 
 const Video = mongoose.model("Video", videoSchema);
