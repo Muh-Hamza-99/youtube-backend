@@ -8,17 +8,17 @@ const {
     deleteVideo,
     likeVideo,
     dislikeVideo,
-    createPlaylist,
-    addToPlaylist,
 } = require("./../controllers/video-controllers");
 
 const commentRouter = require("./comment-routes");
+const playlistRouter = require("./playlist-routes");
 
 const videoUpload = require("../middleware/video-upload");
 const addIP = require("../middleware/add-ip");
 const protect = require("../middleware/protect");
 
 router.use("/:videoID/comments", commentRouter);
+router.use("/:videoID/playlists", playlistRouter);
 
 router
     .route("/")
@@ -40,13 +40,5 @@ router
     .route("/:videoID/dislike")
     .patch(protect, dislikeVideo);
 
-
-router
-    .route("/:videoID/playlist")
-    .post(protect, createPlaylist);
-
-router
-    .route("/:videoID/playlist")
-    .patch(protect, addToPlaylist);
 
 module.exports = router;
