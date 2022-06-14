@@ -4,15 +4,15 @@
   "description": "A backend solution to the famous Youtube website!",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "devStart": "nodemon app.js"
+    "start": "NODE_ENV=production node server.js",
+    "devStart": "nodemon server.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Muh-Hamza-99/youtube-backend.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Muhammad Hamza",
   "license": "ISC",
   "homepage": "https://github.com/Muh-Hamza-99/youtube-backend#readme",
   "dependencies": {
