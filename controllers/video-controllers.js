@@ -69,6 +69,13 @@ const dislikeVideo = catchAsync(async (req, res, next) => {
     res.status(204).json({ status: "success", video });
 });
 
+const getComments = catchAsync(async (req, res, next) => {
+    const { videoID } = req.params;
+    const video = await Video.findById(videoID).populate("comments");
+    if (!video) return next(new AppError("No video with the provided ID!", 400));
+    res.status(200).json({ status: "success", comments: video.comments })
+})
+
 const commentOnVideo = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
     if (!await Video.findById(videoID)) return next(new AppError("There exists no video with the provided ID!"));
@@ -93,6 +100,7 @@ module.exports = {
     deleteVideo,
     likeVideo,
     dislikeVideo,
+    getComments,
     commentOnVideo,
     replyToComment,
 };
