@@ -38,12 +38,11 @@ const login = catchAsync(async (req, res, next) => {
 
 const updatePassword = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const { password, passwordConfirm, passwordCurrent } = req.body;
+    const { password, passwordCurrent } = req.body;
     const user = await User.findById(id).select("+password");
     if (!user || !(await user.correctPassword(passwordCurrent, user.password)))
         return next(new AppError("Your current password is incorrect!", 401));
     user.password = password;
-    user.passwordConfirm = passwordConfirm;
     await user.save();
     createSendToken(user, 204, res);
 });
