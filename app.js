@@ -16,6 +16,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
 
+app.all("*", (req, res, next) => {
+    res.status(404).json({ status: "fail", message: `Can't find ${req.originalUrl} on this server!` });
+    next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
 app.use(globalErrorHandler);
 
 const DB = process.env.MONGO_URI.replace("<PASSWORD>", process.env.MONGO_PASSWORD);
