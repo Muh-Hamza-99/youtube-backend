@@ -12,6 +12,7 @@ const {
     commentOnVideo,
     replyToComment,
     createPlaylist,
+    addToPlaylist,
 } = require("./../controllers/video-controllers");
 
 const videoUpload = require("../middleware/video-upload");
@@ -51,7 +52,11 @@ router
     .get(getComments);
 
 router
-    .route("/playlist")
+    .route("/:videoID/playlist")
     .post(createPlaylist);
+
+router
+    .route("/:videoID/playlist")
+    .patch(addToPlaylist);
 
 module.exports = router;

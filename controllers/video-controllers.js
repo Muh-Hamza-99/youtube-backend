@@ -99,6 +99,12 @@ const createPlaylist = catchAsync(async (req, res, next) => {
     res.status(201).json({ status: "success", playlist: newPlaylist });
 });
 
+const addToPlaylist = catchAsync(async (req, res, next) => {
+    const { videoID } = req.params;
+    const playlist = await Playlist.findOneAndUpdate({ owner: req.token.id }, { $push: { videos: videoID } });
+    res.status(200).json({ status: "success", playlist });
+});
+
 module.exports = {
     uploadVideo,
     stream,
@@ -109,5 +115,6 @@ module.exports = {
     getComments,
     commentOnVideo,
     replyToComment,
-    createPlaylist
+    createPlaylist,
+    addToPlaylist,
 };
