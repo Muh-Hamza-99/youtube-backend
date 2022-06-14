@@ -4,11 +4,14 @@ const router = express.Router();
 const {
     signup,
     login,
-    updatePassword
+    updatePassword,
+    forgotPassword,
 } = require("../controllers/auth-controllers");
 
 router.post("/signup", signup);
 router.post("/login", login);
 router.patch("/updateMyPassword", updatePassword);
+
+router.post("/forgotPassword", forgotPassword);
 
 module.exports = router;
