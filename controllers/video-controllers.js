@@ -2,6 +2,7 @@ const fs = require("fs");
 
 const Video = require("./../models/Video");
 const Comment = require("./../models/Comment");
+const Playlist = require("./../models/Playlist");
 
 const AppError = require("./../utilities/app-error");
 const catchAsync = require("./../utilities/catch-async");
@@ -93,6 +94,11 @@ const replyToComment = catchAsync(async (req, res, next) => {
     res.status(201).json({ status: "success", comment: newComment });
 });
 
+const createPlaylist = catchAsync(async (req, res, next) => {
+    const newPlaylist = await Playlist.create({ owner: req.token.id, playlistName: req.body.name });
+    res.status(201).json({ status: "success", playlist: newPlaylist });
+});
+
 module.exports = {
     uploadVideo,
     stream,
@@ -103,4 +109,5 @@ module.exports = {
     getComments,
     commentOnVideo,
     replyToComment,
+    createPlaylist
 };
