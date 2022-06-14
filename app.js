@@ -7,6 +7,7 @@ const app = express();
 
 const userRouter = require("./routes/user-routes");
 const videoRouter = require("./routes/video-routes");
+const commentRouter = require("./routes/comment-routes");
 
 const globalErrorHandler = require("./utilities/error-handler");
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
+app.use("/api/v1/comments", commentRouter);
 
 app.all("*", (req, res, next) => {
     res.status(404).json({ status: "fail", message: `Can't find ${req.originalUrl} on this server!` });

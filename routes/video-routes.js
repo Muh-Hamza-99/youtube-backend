@@ -8,16 +8,17 @@ const {
     deleteVideo,
     likeVideo,
     dislikeVideo,
-    getComments,
-    commentOnVideo,
-    replyToComment,
     createPlaylist,
     addToPlaylist,
 } = require("./../controllers/video-controllers");
 
+const commentRouter = require("./comment-routes");
+
 const videoUpload = require("../middleware/video-upload");
 const addIP = require("../middleware/add-ip");
 const protect = require("../middleware/protect");
+
+router.use("/:videoID/comments", commentRouter);
 
 router
     .route("/")
@@ -39,17 +40,6 @@ router
     .route("/:videoID/dislike")
     .patch(protect, dislikeVideo);
 
-router
-    .route("/:videoID/comment")
-    .post(protect, commentOnVideo);
-
-router
-    .route("/:videoID/comment/:commentID")
-    .post(protect, replyToComment);
-
-router
-    .route("/:videoID/comment")
-    .get(getComments);
 
 router
     .route("/:videoID/playlist")
