@@ -8,8 +8,8 @@ const getComments = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
     const video = await Video.findById(videoID).populate({ path: "comments", populate: { path: "replies", model: "Comment" } });
     if (!video) return next(new AppError("No video with the provided ID!", 400));
-    res.status(200).json({ status: "success", comments: video.comments })
-})
+    res.status(200).json({ status: "success", comments: video.comments });
+});
 
 const commentOnVideo = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;

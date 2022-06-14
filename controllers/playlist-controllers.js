@@ -8,7 +8,7 @@ const createPlaylist = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
     const newPlaylist = await Playlist.create({ owner: req.token.id, playlistName: req.body.name });
     newPlaylist.videos.push(videoID);
-    await newPlaylist.save()
+    await newPlaylist.save();
     res.status(201).json({ status: "success", playlist: newPlaylist });
 });
 

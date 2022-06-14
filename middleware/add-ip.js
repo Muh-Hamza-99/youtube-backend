@@ -1,5 +1,3 @@
-const IPInfoFinder = require("ip-info-finder");
-
 const Video = require("./../models/Video");
 
 const AppError = require("./../utilities/app-error");
