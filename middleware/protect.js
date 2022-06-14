@@ -15,6 +15,7 @@ const protect = catchAsync(async (req, res, next) => {
     const decoded = await promisify(JWT.verify)(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
     if (!user) return next(new AppError("No user with the ID provided in the token!"));
+    if (user.changedPasswordAfter(decoded.iat)) return next(new AppError("User has recently changed password! Please log in again!", 401));
     req.token = decoded;
     req.user = user;
     next();
