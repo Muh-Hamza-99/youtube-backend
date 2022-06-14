@@ -13,7 +13,7 @@ const addIP = catchAsync(async (req, res, next) => {
     else {
         const index = video.views.indexOf(IP);
         if (index === -1) await Video.findByIdAndUpdate(videoID, { $push: { views: IP } }, { runValidators: true, new: true });
-        next();
+        return next();
     };
     next();  
 });
