@@ -7,11 +7,13 @@ const {
     replyToComment,
 } = require("./../controllers/comment-controllers");
 
+const protect = require("../middleware/protect");
+
 router 
     .route("/")
     .get(getComments)
-    .post(commentOnVideo)
+    .post(protect, commentOnVideo)
 
-router.post("/:commentID", replyToComment);
+router.post("/:commentID", protect, replyToComment);
 
 module.exports = router;

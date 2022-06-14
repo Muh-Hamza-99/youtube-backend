@@ -6,6 +6,10 @@ const {
     addToPlaylist,
 } = require("./../controllers/playlist-controllers");
 
+const protect = require("../middleware/protect");
+
+router.use(protect);
+
 router  
     .route("/")
     .post(createPlaylist)
