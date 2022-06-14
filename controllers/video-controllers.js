@@ -75,6 +75,7 @@ const commentOnVideo = catchAsync(async (req, res, next) => {
     const newComment = await Comment.create({ owner: req.token.id, comment: req.body.comment });
     if (!await Video.findById(videoID)) return next(new AppError("There exists no video with the provided ID!"));
     await Video.findByIdAndUpdate(videoID, { $push: { comments: newComment._id } });
+    res.status(201).json({ status: "success", comment: newComment });
 });
 
 module.exports = {
