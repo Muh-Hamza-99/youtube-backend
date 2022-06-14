@@ -5,15 +5,40 @@ const mongoose = require("mongoose")
 const express = require("express");
 const app = express();
 
+const compression = require("compression");
+const CORS = require("cors");
+
+const expressMongoSanitise = require("express-mongo-sanitize");
+const expressRateLimit = require("express-rate-limit");
+const XSS = require("xss-clean");
+const helmet = require("helmet");
+
 const userRouter = require("./routes/user-routes");
 const videoRouter = require("./routes/video-routes");
 const commentRouter = require("./routes/comment-routes");
 const playlistRouter = require("./routes/playlist-routes");
 
+const AppError = require("./utilities/app-error");
 const globalErrorHandler = require("./utilities/error-handler");
+
+const limiter = expressRateLimit({
+    max: 100,
+    windowMs: 60 * 60 * 1000,
+    message: "Too many requests from this device! Please try again after an hour!",
+});
+
+app.options("*", CORS());
+
+app.use(compression());
 
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true }));
+
+app.use(expressMongoSanitise());
+app.use(XSS());
+app.use(helmet());
+
+app.use("/api", limiter);
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
