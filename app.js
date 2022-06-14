@@ -11,6 +11,7 @@ const videoRouter = require("./routes/video-routes");
 const globalErrorHandler = require("./utilities/error-handler");
 
 app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/videos", videoRouter);
