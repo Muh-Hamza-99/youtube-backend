@@ -53,10 +53,10 @@ router
 
 router
     .route("/:videoID/playlist")
-    .post(createPlaylist);
+    .post(protect, createPlaylist);
 
 router
     .route("/:videoID/playlist")
-    .patch(addToPlaylist);
+    .patch(protect, addToPlaylist);
 
 module.exports = router;
