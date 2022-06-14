@@ -14,6 +14,7 @@ const {
 } = require("./../controllers/video-controllers");
 
 const videoUpload = require("../middleware/video-upload");
+const addIP = require("../middleware/add-ip");
 const protect = require("../middleware/protect");
 
 router
@@ -21,8 +22,10 @@ router
     .post(protect, videoUpload.single("video"), uploadVideo);
 
 router
-    .route("/:videoID")
-    .get(stream)
+    .route("/:videoID/:IP")
+    .get(addIP, stream);
+
+router
     .patch(protect, updateVideo)
     .delete(protect, deleteVideo)
 
