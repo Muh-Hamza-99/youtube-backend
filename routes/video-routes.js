@@ -8,7 +8,8 @@ const {
     deleteVideo,
     likeVideo,
     dislikeVideo,
-    commentOnVideo
+    commentOnVideo,
+    replyToComment,
 } = require("./../controllers/video-controllers");
 
 const videoUpload = require("../middleware/video-upload");
@@ -35,5 +36,9 @@ router
 router
     .route("/:videoID/comment")
     .post(protect, commentOnVideo);
+
+router
+    .route("/:videoID/comment/:commentID")
+    .post(protect, replyToComment);
 
 module.exports = router;

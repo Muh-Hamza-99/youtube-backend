@@ -71,10 +71,18 @@ const dislikeVideo = catchAsync(async (req, res, next) => {
 
 const commentOnVideo = catchAsync(async (req, res, next) => {
     const { videoID } = req.params;
+    if (!await Video.findById(videoID)) return next(new AppError("There exists no video with the provided ID!"));
     if (!req.body.comment) return next(new AppError("There is no text to comment!"));
     const newComment = await Comment.create({ owner: req.token.id, comment: req.body.comment });
-    if (!await Video.findById(videoID)) return next(new AppError("There exists no video with the provided ID!"));
     await Video.findByIdAndUpdate(videoID, { $push: { comments: newComment._id } });
+    res.status(201).json({ status: "success", comment: newComment });
+});
+
+const replyToComment = catchAsync(async (req, res, next) => {
+    const { videoID, commentID } = req.params;
+    if (!await Video.findById(videoID) || !await Comment.findById(commentID)) return next(new AppError("There exists no video/comment with the provided ID!"));
+    const newComment = await Comment.create({ owner: req.token.id, comment: req.body.comment });
+    await Comment.findByIdAndUpdate(commentID, { $push: { replies: newComment._id } });
     res.status(201).json({ status: "success", comment: newComment });
 });
 
@@ -86,4 +94,5 @@ module.exports = {
     likeVideo,
     dislikeVideo,
     commentOnVideo,
+    replyToComment,
 };
