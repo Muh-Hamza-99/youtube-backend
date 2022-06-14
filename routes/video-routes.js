@@ -20,25 +20,18 @@ const protect = require("../middleware/protect");
 router.use("/:videoID/comments", commentRouter);
 router.use("/:videoID/playlists", playlistRouter);
 
-router
-    .route("/")
-    .post(protect, videoUpload.single("video"), uploadVideo);
+router.get("/:videoID/:IP", addIP, stream);
+
+router.use(protect);
+
+router.post("/", videoUpload.single("video"), uploadVideo);
 
 router
-    .route("/:videoID/:IP")
-    .get(addIP, stream);
+    .route("/:videoID")
+    .patch(updateVideo)
+    .delete(deleteVideo)
 
-router
-    .patch(protect, updateVideo)
-    .delete(protect, deleteVideo)
-
-router
-    .route("/:videoID/like")
-    .patch(protect, likeVideo);
-
-router
-    .route("/:videoID/dislike")
-    .patch(protect, dislikeVideo);
-
+router.patch("/:videoID/like", likeVideo);
+router.patch("/:videoID/dislike", dislikeVideo);
 
 module.exports = router;
